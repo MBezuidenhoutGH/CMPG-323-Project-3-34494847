@@ -30,7 +30,7 @@ namespace DeviceManagement_WebApp.Repository
         {
             return _context.Set<T>().ToList();
         }
-        public T GetById(int id)
+        public T GetById(Guid? id)
         {
             return _context.Set<T>().Find(id);
         }
@@ -41,6 +41,29 @@ namespace DeviceManagement_WebApp.Repository
         public void RemoveRange(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
+        }
+
+        //Custom code that were not provided:
+
+        //Update existing record
+        public void Update(T entity)
+        {
+            _context.Set<T>().Update(entity);
+        }
+
+        //Save changes to any changes made to a record
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        //Check if ID exists then return true if it exists or false if it does not exists
+        public bool Any(Guid? id)
+        {
+            if (GetById(id) != null)
+                return true;
+
+            return false;
         }
     }
 }
