@@ -44,19 +44,20 @@ namespace DeviceManagement_WebApp.Repository
         }
 
         //Custom code that were not provided:
+
         //Update existing record
         public void Update(T entity)
         {
             _context.Set<T>().Update(entity);
         }
 
-        //Save changes to save any changes made
+        //Save changes to any changes made to a record
         public void Save()
         {
             _context.SaveChanges();
         }
 
-        //Check if id exists then return true if it exists
+        //Check if ID exists then return true if it exists or false if it does not exists
         public bool Any(Guid? id)
         {
             if (GetById(id) != null)
