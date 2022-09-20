@@ -25,6 +25,8 @@ namespace DeviceManagement_WebApp.Controllers
         // GET: Devices
         public async Task<IActionResult> Index()
         {
+            //Using .GetAll() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to display all devices
             return View(_devicesRepository.GetAll());
         }
 
@@ -36,6 +38,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
+            //Using .GetById() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to find the specific device by ID
             var device = _devicesRepository.GetById(id);
 
             if (device == null)
@@ -60,8 +64,14 @@ namespace DeviceManagement_WebApp.Controllers
         public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActive,DateCreated")] Device device)
         {
             device.DeviceId = Guid.NewGuid();
+
+            //Using .Add() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to add the record to the database
             _devicesRepository.Add(device);
+            //Using .Save() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to save the added record to the database
             _devicesRepository.Save();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -73,14 +83,18 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
+            //Using .GetById() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to find the specific device by ID
             var device = _devicesRepository.GetById(id);
 
             if (device == null)
             {
                 return NotFound();
             }
+
             ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryName", device.CategoryId);
             ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneId", "ZoneName", device.ZoneId);
+
             return View(device);
         }
 
@@ -95,7 +109,11 @@ namespace DeviceManagement_WebApp.Controllers
             }
             try
             {
+                //Using .Update() method from DevicesRepository (which is inherited from the GenericRepository)
+                //to update the existing record
                 _devicesRepository.Update(device);
+                //Using .Save() method from DevicesRepository (which is inherited from the GenericRepository)
+                //to save the update made to the existing record
                 _devicesRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -109,8 +127,8 @@ namespace DeviceManagement_WebApp.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
 
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Devices/Delete/5
@@ -121,6 +139,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
+            //Using .GetById() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to find the specific device by ID
             var device = _devicesRepository.GetById(id);
 
             if (device == null)
@@ -137,13 +157,21 @@ namespace DeviceManagement_WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var device = _devicesRepository.GetById(id);
+
+            //Using .Remove() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to remove an existing record
             _devicesRepository.Remove(device);
+            //Using .Save() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to save removed existing record
             _devicesRepository.Save();
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool DeviceExists(Guid id)
         {
+            //Using .Any() method from DevicesRepository (which is inherited from the GenericRepository)
+            //to return a bool if specific record exists
             return _devicesRepository.Any(id);
         }
     }
