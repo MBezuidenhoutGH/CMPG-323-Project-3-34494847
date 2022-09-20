@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 
 namespace DeviceManagement_WebApp.Repository
 {
+    //All the generic method definitions are defined as follows to be used in all the controllers
     public interface IGenericRepository<T> where T : class
     {
         T GetById(Guid? id);

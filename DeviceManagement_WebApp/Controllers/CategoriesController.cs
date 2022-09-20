@@ -23,6 +23,8 @@ namespace DeviceManagement_WebApp.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
+            //Using .GetAll() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to display all categories
             return View(_categoriesRepository.GetAll());
         }
 
@@ -34,6 +36,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
+            //Using .GetById() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to find the specific category by ID
             var category = _categoriesRepository.GetById(id);
 
             if (category == null)
@@ -56,7 +60,12 @@ namespace DeviceManagement_WebApp.Controllers
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,CategoryDescription,DateCreated")] Category category)
         {
             category.CategoryId = Guid.NewGuid();
+
+            //Using .Add() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to add the record to the database
             _categoriesRepository.Add(category);
+            //Using .Save() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to save the added record to the database
             _categoriesRepository.Save();
 
             return RedirectToAction(nameof(Index));
@@ -70,12 +79,15 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
+            //Using .GetById() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to find the specific category by ID
             var category = _categoriesRepository.GetById(id);
 
             if (category == null)
             {
                 return NotFound();
             }
+
             return View(category);
         }
 
@@ -90,7 +102,11 @@ namespace DeviceManagement_WebApp.Controllers
             }
             try
             {
+                //Using .Update() method from CategoriesRepository (which is inherited from the GenericRepository)
+                //to update the existing record
                 _categoriesRepository.Update(category);
+                //Using .Save() method from CategoriesRepository (which is inherited from the GenericRepository)
+                //to save the update made to the existing record
                 _categoriesRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -104,6 +120,7 @@ namespace DeviceManagement_WebApp.Controllers
                     throw;
                 }
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -115,6 +132,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
+            //Using .GetById() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to find the specific category by ID
             var category = _categoriesRepository.GetById(id);
 
             if (category == null)
@@ -131,8 +150,14 @@ namespace DeviceManagement_WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var category = _categoriesRepository.GetById(id);
+
+            //Using .Remove() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to remove an existing record
             _categoriesRepository.Remove(category);
+            //Using .Save() method from CategoriesRepository (which is inherited from the GenericRepository)
+            //to save removed existing record
             _categoriesRepository.Save();
+
             return RedirectToAction(nameof(Index));
         }
 
