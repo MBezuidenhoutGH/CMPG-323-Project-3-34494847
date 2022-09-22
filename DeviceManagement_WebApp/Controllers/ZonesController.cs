@@ -20,153 +20,76 @@ namespace DeviceManagement_WebApp.Controllers
             _zonesRepository = zonesRepository;
         }
 
-        // GET: Devices
+        // GET: Zones - Display all zones in Index View
         public async Task<IActionResult> Index()
         {
-            //Using .GetAll() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to display all zones
             return View(_zonesRepository.GetAll());
         }
 
-        // GET: Zones/Details/5
+        // GET: Zones/Details - Display specific zone in Details View by parsing ID
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
+            if (_zonesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to find the specific zone by ID
-            var zone = _zonesRepository.GetById(id);
-
-            if (zone == null)
-            {
-                return NotFound();
-            }
-
-            return View(zone);
+            else
+                return View(_zonesRepository.CheckDetails(id));
         }
 
-        // GET: Zones/Create
+        // GET: Zones/Create - No special methods needed
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Zones/Create
+        // POST: Zones/Create - Create a zone in Create View by parsing a class
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
         {
             zone.ZoneId = Guid.NewGuid();
-
-            //Using .Add() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to add the record to the database
-            _zonesRepository.Add(zone);
-            //Using .Save() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to save the added record to the database
-            _zonesRepository.Save();
-
+            _zonesRepository.Create(zone);
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Zones/Edit/5
+        // GET: Zones/Edit - Display specific zone in Edit View by parsing ID
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
+            if (_zonesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to find the specific zone by ID
-            var zone = _zonesRepository.GetById(id);
-
-            if (zone == null)
-            {
-                return NotFound();
-            }
-
-            return View(zone);
+            else
+                return View(_zonesRepository.CheckDetails(id));
         }
 
-        // POST: Zones/Edit/5
+        // POST: Zones/Edit - Edit specific zone in Edit View by parsing ID and class
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
         {
             if (id != zone.ZoneId)
-            {
                 return NotFound();
-            }
 
-            try
-            {
-                //Using .Update() method from ZonesRepository (which is inherited from the GenericRepository)
-                //to update the existing record
-                _zonesRepository.Update(zone);
-                //Using .Save() method from ZonesRepository (which is inherited from the GenericRepository)
-                //to save the update made to the existing record
-                _zonesRepository.Save();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ZoneExists(zone.ZoneId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (_zonesRepository.Edit(id, zone) == false)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Zones/Delete/5
+        // GET: Zones/Delete - Display specific zone in Delete View by parsing ID
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
+            if (_zonesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to find the specific zone by ID
-            var zone = _zonesRepository.GetById(id);
-
-            if (zone == null)
-            {
-                return NotFound();
-            }
-
-            return View(zone);
+            else
+                return View(_zonesRepository.CheckDetails(id));
         }
 
-        // POST: Zones/Delete/5
+        // POST: Zones/Delete - Delete specific zone in Delete View by parsing ID
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var zone = _zonesRepository.GetById(id);
-
-            //Using .Remove() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to remove an existing record
-            _zonesRepository.Remove(zone);
-            //Using .Save() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to save removed existing record
-            _zonesRepository.Save();
-
+            _zonesRepository.DeleteConfirmed(_zonesRepository.GetById(id));
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ZoneExists(Guid id)
-        {
-            //Using .Any() method from ZonesRepository (which is inherited from the GenericRepository)
-            //to return a bool if specific record exists
-            return _zonesRepository.Any(id);
         }
     }
 }
