@@ -68,16 +68,9 @@ namespace DeviceManagement_WebApp.Controllers
             if (id != category.CategoryId)
                 return NotFound();
 
-            try { 
-                _categoriesRepository.Edit(category);
-            }
-            catch (DbUpdateConcurrencyException){
-                if (_categoriesRepository.CheckID(category.CategoryId))
-                    throw;
-                else
-                    return NotFound();       
-            }
-
+            if(_categoriesRepository.Edit(id, category) == false)
+                return NotFound();       
+            
             return RedirectToAction(nameof(Index));
         }
 

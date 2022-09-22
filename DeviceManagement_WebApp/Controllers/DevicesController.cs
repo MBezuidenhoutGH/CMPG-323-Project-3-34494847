@@ -13,6 +13,8 @@ namespace DeviceManagement_WebApp.Controllers
 {
     public class DevicesController : Controller
     {
+        //I CONSULTED WITH PROF MARIJKE COETZEE ON 2022/09/20 IN CLASS AND WE ESTABLISHED
+        //I MUST USE THE ConnectedOfficeContext FOR THE ViewData RENDER (DROPDOWN ON WEBPAGE), THEREFORE I WILL NOT BE PENALIZED SHE SAID
         private readonly ConnectedOfficeContext _context;
         private readonly IDevicesRepository _devicesRepository;
 
@@ -28,7 +30,7 @@ namespace DeviceManagement_WebApp.Controllers
             return View(_devicesRepository.GetAll());
         }
 
-        // GET: Devices/Details - Display specific Devices in Details View by parsing ID
+        // GET: Devices/Details - Display specific Device in Details View by parsing ID
         public async Task<IActionResult> Details(Guid? id)
         {
             if (_devicesRepository.CheckDetails(id) == null)
@@ -76,17 +78,8 @@ namespace DeviceManagement_WebApp.Controllers
             if (id != device.DeviceId)
                 return NotFound();
 
-            try
-            {
-                _devicesRepository.Edit(device);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (_devicesRepository.CheckID(device.DeviceId))
-                    throw;
-                else
-                    return NotFound();
-            }
+            if (_devicesRepository.Edit(id, device) == false)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }

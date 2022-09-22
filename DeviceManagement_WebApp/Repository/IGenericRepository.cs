@@ -26,7 +26,7 @@ namespace DeviceManagement_WebApp.Repository
         void Update(T entity);
         void Save();     
         public void Create(T t);
-        public void Edit(T t);
+        public bool Edit(Guid id, T t);
         public void DeleteConfirmed(T t);
     }
 }

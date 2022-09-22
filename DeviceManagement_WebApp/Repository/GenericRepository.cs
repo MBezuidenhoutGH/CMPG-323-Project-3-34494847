@@ -1,6 +1,7 @@
 ﻿using DeviceManagement_WebApp.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,10 +101,21 @@ namespace DeviceManagement_WebApp.Repository
         }
 
         //Using a combination of Update() and Save() method to edit a record
-        public void Edit(T t)
+        public bool Edit(Guid id, T t)
         {
-            Update(t);
-            Save();
+            try
+            {
+                Update(t);
+                Save();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (CheckID(id))
+                    throw;
+                else 
+                    return false;
+            }
         }
 
         //Using a combination of Remove() and Save() method to remove a record
