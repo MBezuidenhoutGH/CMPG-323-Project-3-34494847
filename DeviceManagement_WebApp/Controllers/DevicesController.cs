@@ -22,35 +22,22 @@ namespace DeviceManagement_WebApp.Controllers
             _devicesRepository = devicesRepository;
         }
 
-        // GET: Devices
+        // GET: Devices - Display all Devices in Index View
         public async Task<IActionResult> Index()
         {
-            //Using .GetAll() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to display all devices
             return View(_devicesRepository.GetAll());
         }
 
-        // GET: Devices/Details/5
+        // GET: Devices/Details - Display specific Devices in Details View by parsing ID
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
+            if (_devicesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to find the specific device by ID
-            var device = _devicesRepository.GetById(id);
-
-            if (device == null)
-            {
-                return NotFound();
-            }
-
-            return View(device);
+            else
+                return View(_devicesRepository.CheckDetails(id));
         }
 
-        // GET: Devices/Create
+        // GET: Devices/Create - No special methods needed
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryName");
@@ -58,121 +45,68 @@ namespace DeviceManagement_WebApp.Controllers
             return View();
         }
 
-        // POST: Devices/Create
+        // POST: Devices/Create - Create a device in Create View by parsing a class
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActive,DateCreated")] Device device)
         {
             device.DeviceId = Guid.NewGuid();
-
-            //Using .Add() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to add the record to the database
-            _devicesRepository.Add(device);
-            //Using .Save() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to save the added record to the database
-            _devicesRepository.Save();
-
+            _devicesRepository.Create(device);
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Devices/Edit/5
+        // GET: Devices/Edit - Display specific device in Edit View by parsing ID
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
+            if (_devicesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to find the specific device by ID
-            var device = _devicesRepository.GetById(id);
-
-            if (device == null)
+            else
             {
-                return NotFound();
+                ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryName", _devicesRepository.GetById(id).CategoryId);
+                ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneId", "ZoneName", _devicesRepository.GetById(id).ZoneId);
+                return View(_devicesRepository.CheckDetails(id));
             }
-
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryName", device.CategoryId);
-            ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneId", "ZoneName", device.ZoneId);
-
-            return View(device);
         }
 
-        // POST: Devices/Edit/5
+        // POST: Devices/Edit - Edit specific device in Edit View by parsing ID and class
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActive,DateCreated")] Device device)
         {
             if (id != device.DeviceId)
-            {
                 return NotFound();
-            }
+
             try
             {
-                //Using .Update() method from DevicesRepository (which is inherited from the GenericRepository)
-                //to update the existing record
-                _devicesRepository.Update(device);
-                //Using .Save() method from DevicesRepository (which is inherited from the GenericRepository)
-                //to save the update made to the existing record
-                _devicesRepository.Save();
+                _devicesRepository.Edit(device);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeviceExists(device.DeviceId))
-                {
-                    return NotFound();
-                }
-                else
-                {
+                if (_devicesRepository.CheckID(device.DeviceId))
                     throw;
-                }
+                else
+                    return NotFound();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Devices/Delete/5
+        // GET: Devices/Delete - Display specific device in Delete View by parsing ID
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
+            if (_devicesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to find the specific device by ID
-            var device = _devicesRepository.GetById(id);
-
-            if (device == null)
-            {
-                return NotFound();
-            }
-
-            return View(device);
+            else
+                return View(_devicesRepository.CheckDetails(id));
         }
 
-        // POST: Devices/Delete/5
+        // POST: Devices/Delete - Delete specific device in Delete View by parsing ID
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var device = _devicesRepository.GetById(id);
-
-            //Using .Remove() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to remove an existing record
-            _devicesRepository.Remove(device);
-            //Using .Save() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to save removed existing record
-            _devicesRepository.Save();
-
+            _devicesRepository.DeleteConfirmed(_devicesRepository.GetById(id));
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DeviceExists(Guid id)
-        {
-            //Using .Any() method from DevicesRepository (which is inherited from the GenericRepository)
-            //to return a bool if specific record exists
-            return _devicesRepository.CheckID(id);
         }
     }
 }

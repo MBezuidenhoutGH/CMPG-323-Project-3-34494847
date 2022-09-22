@@ -26,7 +26,7 @@ namespace DeviceManagement_WebApp.Controllers
             return View(_categoriesRepository.GetAll());
         }
 
-        // GET: Categories - Display specific category in Details View by parsing ID
+        // GET: Categories/Details - Display specific category in Details View by parsing ID
         public async Task<IActionResult> Details(Guid? id)
         {
             if (_categoriesRepository.CheckDetails(id) == null)
