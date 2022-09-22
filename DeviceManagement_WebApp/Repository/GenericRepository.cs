@@ -1,8 +1,12 @@
 ﻿using DeviceManagement_WebApp.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace DeviceManagement_WebApp.Repository
 {
@@ -47,25 +51,79 @@ namespace DeviceManagement_WebApp.Repository
 
         //Custom code I wrote that were not provided so that all outcomes can be achieved:
 
-        //Update an existing record
-        public void Update(T entity)
-        {
-            _context.Set<T>().Update(entity);
-        }
-
-        //Save changes of any changes made to an existing record
-        public void Save()
-        {
-            _context.SaveChanges();
-        }
-
-        //Check if ID exists then return true if it exists or false if it does not exist
-        public bool Any(Guid? id)
+        //Check if parsed ID exists then return true if it exists or false if it does not exist
+        public bool CheckID(Guid? id)
         {
             if (GetById(id) != null)
                 return true;
 
             return false;
         }
+
+        //Check if parsed class exists then return true if it exists or false if it does not exist
+        public bool CheckClass(T t)
+        {
+            if (_context.Set<T>() != null)
+                return true;
+
+            return false;
+        }
+
+        //Using a combination of CheckID, CheckClass to return entire class set using GetByID
+        public T CheckDetails(Guid? id)
+        {
+            if (CheckID(id))
+            {
+                var t = GetById(id);
+                if (CheckClass(t))
+                    return t;
+            }
+            return null;
+        }
+
+        //Update an existing record
+        public void Update(T entity)
+        {
+            _context.Set<T>().Update(entity);
+        }
+
+        //Save changes made to an existing record
+        public void Save()
+        {
+            _context.SaveChanges();
+        }   
+
+        //Using a combination of Add() and Save() method to create a record
+        public void Create(T t)
+        {
+            Add(t);
+            Save();
+        }
+
+        //Using a combination of Update() and Save() method to edit a record
+        public bool Edit(Guid id, T t)
+        {
+            try
+            {
+                Update(t);
+                Save();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (CheckID(id))
+                    throw;
+                else 
+                    return false;
+            }
+        }
+
+        //Using a combination of Remove() and Save() method to remove a record
+        public void DeleteConfirmed(T t)
+        {
+            Remove(t);
+            Save();
+        }
+
     }
 }

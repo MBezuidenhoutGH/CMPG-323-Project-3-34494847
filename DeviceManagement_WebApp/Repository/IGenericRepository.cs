@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace DeviceManagement_WebApp.Repository
 {
@@ -16,8 +18,15 @@ namespace DeviceManagement_WebApp.Repository
         void RemoveRange(IEnumerable<T> entities);
 
         //Custom code that were not provided:
+        //Refer to GenericRepository for more commentary
+
+        bool CheckID(Guid? id);
+        public bool CheckClass(T t);
+        public T CheckDetails(Guid? id);
         void Update(T entity);
-        void Save();
-        bool Any(Guid? id);
+        void Save();     
+        public void Create(T t);
+        public bool Edit(Guid id, T t);
+        public void DeleteConfirmed(T t);
     }
 }
