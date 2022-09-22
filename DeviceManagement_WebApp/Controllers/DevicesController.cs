@@ -172,7 +172,7 @@ namespace DeviceManagement_WebApp.Controllers
         {
             //Using .Any() method from DevicesRepository (which is inherited from the GenericRepository)
             //to return a bool if specific record exists
-            return _devicesRepository.Any(id);
+            return _devicesRepository.CheckID(id);
         }
     }
 }

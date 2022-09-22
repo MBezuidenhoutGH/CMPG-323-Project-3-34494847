@@ -20,151 +20,83 @@ namespace DeviceManagement_WebApp.Controllers
             _categoriesRepository = categoriesRepository;
         }
 
-        // GET: Categories
+        // GET: Categories - Display all categories in Index View
         public async Task<IActionResult> Index()
-        {
-            //Using .GetAll() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to display all categories
+        {    
             return View(_categoriesRepository.GetAll());
         }
 
-        // GET: Categories/Details/5
+        // GET: Categories - Display specific category in Details View by parsing ID
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
+            if (_categoriesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to find the specific category by ID
-            var category = _categoriesRepository.GetById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
+            else
+                return View(_categoriesRepository.CheckDetails(id));
         }
 
-        // GET: Categories/Create
+        // GET: Categories/Create - No special methods needed
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: Categories/Create - Create a category in Create View by parsing a class
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,CategoryDescription,DateCreated")] Category category)
         {
             category.CategoryId = Guid.NewGuid();
-
-            //Using .Add() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to add the record to the database
-            _categoriesRepository.Add(category);
-            //Using .Save() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to save the added record to the database
-            _categoriesRepository.Save();
-
+            _categoriesRepository.Create(category);
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Categories/Edit/5
+        // GET: Categories/Edit - Display specific category in Edit View by parsing ID
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
+            if (_categoriesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to find the specific category by ID
-            var category = _categoriesRepository.GetById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
+            else
+                return View(_categoriesRepository.CheckDetails(id));
         }
 
-        // POST: Categories/Edit/5
+        // POST: Categories/Edit - Edit specific category in Edit View by parsing ID and class
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("CategoryId,CategoryName,CategoryDescription,DateCreated")] Category category)
         {
             if (id != category.CategoryId)
-            {
                 return NotFound();
+
+            try { 
+                _categoriesRepository.Edit(category);
             }
-            try
-            {
-                //Using .Update() method from CategoriesRepository (which is inherited from the GenericRepository)
-                //to update the existing record
-                _categoriesRepository.Update(category);
-                //Using .Save() method from CategoriesRepository (which is inherited from the GenericRepository)
-                //to save the update made to the existing record
-                _categoriesRepository.Save();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (CategoryExists(category.CategoryId) == false)
-                {
-                    return NotFound();
-                }
-                else
-                {
+            catch (DbUpdateConcurrencyException){
+                if (_categoriesRepository.CheckID(category.CategoryId))
                     throw;
-                }
+                else
+                    return NotFound();       
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Categories/Delete/5
+        // GET: Categories/Delete - Display specific category in Delete View by parsing ID
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
+            if (_categoriesRepository.CheckDetails(id) == null)
                 return NotFound();
-            }
-
-            //Using .GetById() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to find the specific category by ID
-            var category = _categoriesRepository.GetById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
+            else
+                return View(_categoriesRepository.CheckDetails(id));
         }
 
-        // POST: Categories/Delete/5
+        // POST: Categories/Delete - Delete specific category in Delete View by parsing ID
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var category = _categoriesRepository.GetById(id);
-
-            //Using .Remove() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to remove an existing record
-            _categoriesRepository.Remove(category);
-            //Using .Save() method from CategoriesRepository (which is inherited from the GenericRepository)
-            //to save removed existing record
-            _categoriesRepository.Save();
-
+            _categoriesRepository.DeleteConfirmed(_categoriesRepository.GetById(id));
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoryExists(Guid id)
-        {
-            //Check if ID exists then return true if it exists or false if it does not exists
-            return _categoriesRepository.Any(id);
         }
     }
 }

@@ -166,7 +166,7 @@ namespace DeviceManagement_WebApp.Controllers
         {
             //Using .Any() method from ZonesRepository (which is inherited from the GenericRepository)
             //to return a bool if specific record exists
-            return _zonesRepository.Any(id);
+            return _zonesRepository.CheckID(id);
         }
     }
 }
