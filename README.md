@@ -1,4 +1,4 @@
-Note: Regarding the DBContext in the device controller please refer to the Data Access Layer section below<br />
+Note: Regarding the ConnectedOfficeContext in the DevicesController please refer to the Data Access Layer section below<br /><br />
 The code of the Web App was provided by the lecturer due to the project focusing on Standards & Patterns, 
 the code that was changed by the student to successfully complete this project is in the controller classes, 
 Startup.cs and apppsetinggs.json(that is hidden in .gitignore). Further, the student created a folder named 
