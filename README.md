@@ -49,7 +49,7 @@ to use the Web App: <br />
 	The student has successfully implemented all classes and interfaces: <br />
 	<img src="img/repository.png" alt=""/><br />
 	For which dependency injection was done in the Startup.cs file: <br />
-	<img src="img/dependency.png" alt=""/><br />
+	<img src="img/dependency.png" alt=""/>
 </p>
 <h2>Standards</h2>
 <p>
@@ -64,7 +64,7 @@ to use the Web App: <br />
 <h2>Hosting</h2>
 <p>
 	The Web App is hosted on the student's Microsoft Azure account. The Web App can be accessed over the internet anywhere in the world by clicking: 
-	<a href="https://webapp-34494847.azurewebsites.net/">WebApp-34494847</a>.Student 34494847's resource group includes the following: <br />
+	<a href="https://webapp-34494847.azurewebsites.net/">WebApp-34494847</a>. Student 34494847's resource group includes the following: <br />
 	<img src="img/hosting.png" alt=""/>
 </p>
 <h2>Scrum Implementation</h2>
@@ -84,7 +84,7 @@ to use the Web App: <br />
 	<br /><img src="img/control1.png" alt=""/><br />
 	The student also has made extensive use of the .gitignore file to hide any type of file that contains credentials and sensitive information. This includes files such as 
 	appsettings.json, azure publish profiles etc:<br />
-	<br /><img src="img/.gitignore.png" alt=""/><br />
+	<br /><img src="img/.gitignore.png" alt=""/>
 </p>
 <h2>Reference List</h2>
 <p>
