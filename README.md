@@ -1,4 +1,3 @@
-Note: Regarding the ConnectedOfficeContext in the DevicesController please refer to the Data Access Layer section below<br /><br />
 The code of the Web App was provided by the lecturer due to the project focusing on Standards & Patterns, 
 the code that was changed by the student to successfully complete this project is in the controller classes, 
 Startup.cs and apppsetinggs.json(that is hidden in .gitignore). Further, the student created a folder named 
@@ -38,9 +37,7 @@ to use the Web App: <br />
 </p>
 <h2>Data Access Layer</h2>
 <p>
-	The ConnectedOfficeContext is only referenced in the GenericRepository class, except at the DevicesController about which I consulted Prof Marijke Coetzee 
-	on 2022/09/20 in class and we established that I must use the ConnectedOfficeContext in the DevicesController for the ViewData render (dropdown on the webpage) 
-	and she said I will not be penalized for this. The student used the .json file that was provided by the lecturer which means that the student used a connection 
+	The ConnectedOfficeContext is only referenced in the GenericRepository class. The student used the .json file that was provided by the lecturer which means that the student used a connection 
 	string to an online database that the lecturer is hosting. Lastly, all SOLID principles were successfully applied as discussed previously, meaning that data was not 
 	accessed directly from each controller.
 </p>

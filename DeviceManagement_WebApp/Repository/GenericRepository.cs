@@ -124,6 +124,5 @@ namespace DeviceManagement_WebApp.Repository
             Remove(t);
             Save();
         }
-
     }
 }
