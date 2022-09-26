@@ -13,21 +13,18 @@ namespace DeviceManagement_WebApp.Controllers
 {
     public class DevicesController : Controller
     {
-        //I CONSULTED WITH PROF MARIJKE COETZEE ON 2022/09/20 IN CLASS AND WE ESTABLISHED
-        //I MUST USE THE ConnectedOfficeContext FOR THE ViewData RENDER (DROPDOWN ON WEBPAGE), THEREFORE I WILL NOT BE PENALIZED SHE SAID
-        private readonly ConnectedOfficeContext _context;
         private readonly IDevicesRepository _devicesRepository;
 
-        public DevicesController(ConnectedOfficeContext context, IDevicesRepository devicesRepository)
+        public DevicesController(IDevicesRepository devicesRepository)
         {
-            _context = context;
             _devicesRepository = devicesRepository;
         }
 
         // GET: Devices - Display all Devices in Index View
         public async Task<IActionResult> Index()
         {
-            return View(_devicesRepository.GetAll());
+
+            return View(_devicesRepository.GetAllDevices());
         }
 
         // GET: Devices/Details - Display specific Device in Details View by parsing ID
@@ -42,8 +39,8 @@ namespace DeviceManagement_WebApp.Controllers
         // GET: Devices/Create - No special methods needed
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryName");
-            ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneId", "ZoneName");
+            ViewData["CategoryId"] = new SelectList(_devicesRepository.GetAllCategories(), "CategoryId", "CategoryName");
+            ViewData["ZoneId"] = new SelectList(_devicesRepository.GetAllZones(), "ZoneId", "ZoneName");
             return View();
         }
 
@@ -64,8 +61,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             else
             {
-                ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryName", _devicesRepository.GetById(id).CategoryId);
-                ViewData["ZoneId"] = new SelectList(_context.Zone, "ZoneId", "ZoneName", _devicesRepository.GetById(id).ZoneId);
+                ViewData["CategoryId"] = new SelectList(_devicesRepository.GetAllCategories(), "CategoryId", "CategoryName", _devicesRepository.GetById(id).CategoryId);
+                ViewData["ZoneId"] = new SelectList(_devicesRepository.GetAllZones(), "ZoneId", "ZoneName", _devicesRepository.GetById(id).ZoneId);
                 return View(_devicesRepository.CheckDetails(id));
             }
         }

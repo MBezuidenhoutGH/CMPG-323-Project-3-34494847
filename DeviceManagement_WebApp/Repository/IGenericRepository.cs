@@ -21,12 +21,12 @@ namespace DeviceManagement_WebApp.Repository
         //Refer to GenericRepository for more commentary
 
         bool CheckID(Guid? id);
-        public bool CheckClass(T t);
-        public T CheckDetails(Guid? id);
+        bool CheckClass(T t);
+        T CheckDetails(Guid? id);
         void Update(T entity);
         void Save();     
-        public void Create(T t);
-        public bool Edit(Guid id, T t);
-        public void DeleteConfirmed(T t);
+        void Create(T t);
+        bool Edit(Guid id, T t);
+        void DeleteConfirmed(T t);
     }
 }
